@@ -1,2 +1,10 @@
 *.out
 *.exe
+tests/_out/
+tests/_out/*
+compilado/
+compilado/*
+.vs/
+.vs/*
+.vscode/
+.vscode/*
