@@ -3,6 +3,7 @@
 
 #include "List.h"
 #include <cassert>
+#include <iostream>
 
 template <class T>
 class ListImp : public List<T>
@@ -23,11 +24,11 @@ private:
     int size;
 
 public:
-    ListImp() : head(NULL), size(0) {}
+    ListImp() : head(nullptr), size(0) {}
 
     void insert(T element)
     {
-        Node *newNode = new Node(element, NULL, this->tail);
+        Node *newNode = new Node(element, nullptr, this->tail);
         if (isEmpty())
         {
             head = newNode;
@@ -44,7 +45,7 @@ public:
     void insertAt(int index, T element)
     {
         assert(index >= 0 && index < size);
-        Node *newNode = new Node(element, NULL, NULL);
+        Node *newNode = new Node(element, nullptr, nullptr);
         if (index == 0)
         {
             newNode->next = head;
@@ -72,10 +73,10 @@ public:
         size++;
     }
 
-    void remove(T element)
+    bool remove(T element)
     {
         Node *current = head;
-        while (current != NULL)
+        while (current != nullptr)
         {
             // note: that the elment should implement == operator
             if (current->element == element)
@@ -83,17 +84,17 @@ public:
                 if (current == head)
                 {
                     head = current->next;
-                    if (head != NULL)
+                    if (head != nullptr)
                     {
-                        head->previous = NULL;
+                        head->previous = nullptr;
                     }
                 }
                 else if (current == tail)
                 {
                     tail = current->previous;
-                    if (tail != NULL)
+                    if (tail != nullptr)
                     {
-                        tail->next = NULL;
+                        tail->next = nullptr;
                     }
                 }
                 else
@@ -103,10 +104,11 @@ public:
                 }
                 delete current;
                 size--;
-                return;
+                return true;
             }
             current = current->next;
         }
+        return false;
     }
 
     void removeAt(int index)
@@ -120,17 +122,17 @@ public:
         if (current == head)
         {
             head = current->next;
-            if (head != NULL)
+            if (head != nullptr)
             {
-                head->previous = NULL;
+                head->previous = nullptr;
             }
         }
         else if (current == tail)
         {
             tail = current->previous;
-            if (tail != NULL)
+            if (tail != nullptr)
             {
-                tail->next = NULL;
+                tail->next = nullptr;
             }
         }
         else
@@ -144,7 +146,7 @@ public:
 
     bool isEmpty()
     {
-        return head == NULL;
+        return head == nullptr;
     }
 
     T get(int index)
@@ -156,6 +158,37 @@ public:
             current = current->next;
         }
         return current->element;
+    }
+
+    T getElement(T element)
+    {
+        Node *current = head;
+        while (current != nullptr)
+        {
+            // note: that the elment should implement == operator
+            if (current->element == element)
+            {
+                return current->element;
+            }
+            current = current->next;
+        }
+        assert(false); //element did not exist
+    }
+
+    bool contains(T element)
+    {
+        Node *current = head;
+        while (current != nullptr)
+        {
+            
+            // note: that the elment should implement == operator
+            if (current->element == element)
+            {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
     }
 
     int getSize()

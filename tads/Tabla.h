@@ -1,6 +1,8 @@
 #ifndef TABLA_H
 #define TABLA_H
 
+#include <iostream>
+
 template <class K, class V>
 class Tabla
 {
@@ -13,26 +15,25 @@ public:
 
     virtual void remove(K key) = 0;
 
-    virtual int count() = 0;
+    virtual bool contains(K key) = 0;
+
+    virtual int getCount() = 0;
 
 };
 
 template <class K, class V>
-class ClaveValor {
-    private:
+struct ClaveValor {
     K clave;
     V valor;
     
-    public:
-    ClaveValor(K& unaClave, V& unValor) : clave(unaClave), valor(unValor) {}
+    ClaveValor(K unaClave, V unValor) : clave(unaClave), valor(unValor) {}
+    //Usar este constructor solo para comparaciones
+    ClaveValor(K unaClave) : clave(unaClave) {}
 
-    K getClave() {return this->clave;}
-    V getValor() {return this->valor;}
-    void setClave(K nuevaClave) { this->clave = nuevaClave; }
     void setValor(K nuevoValor) { this->valor = nuevoValor; }
 
-    bool operator==(ClaveValor other) { return this->getClave() == other.getClave(); }
-    bool operator==(K otherK) { return this->getClave() == otherK; }
+    bool operator==(ClaveValor other) { return this->clave == other.clave; }
+    bool operator==(K otherK) { return this->clave == otherK; }
 };
 
 #endif

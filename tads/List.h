@@ -15,7 +15,7 @@ public:
 
     // pre: -
     // post: remove the first element that is equal to the given element
-    virtual void remove(T element) = 0;
+    virtual bool remove(T element) = 0;
 
     // pre: the index is valid (0 <= index < size)
     // post: the element is removed at the given index
@@ -32,6 +32,16 @@ public:
     // pre: -
     // post: returns the size of the list
     virtual int getSize() = 0;
+
+    // EXTENSION
+    // pre: -
+    // post: returns the first element that is equal to the given element
+    virtual T getElement(T element) = 0;
+
+    // EXTENSION
+    // pre: -
+    // post: returns whether an element exists that equals the given element
+    virtual bool contains(T element) = 0;
 };
 
 #endif

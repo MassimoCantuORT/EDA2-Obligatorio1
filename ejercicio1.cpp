@@ -7,8 +7,22 @@
 
 using namespace std;
 
+int hasha(int key){
+    return key;
+}
+
 int main()
 {
+    TablaHashAbierto<int, string>* table = new TablaHashAbierto<int,string>(5, hasha);
+
+    table->insert(5, "hola");
+    table->insert(4, "ads");
+    table->insert(2, "gfd");
+    table->insert(2, "hgdg");
+    table->insert(100, "qweqds");
+
+    cout << table->get(4);
+
     return 0;
 }
 
