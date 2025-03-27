@@ -8,19 +8,10 @@ if [ $# -ne 0 ]; then
     ej=$1
 fi
 
-find ./compilado/ -type f -name "*.exe" -exec rm {} \;
 find ./tests/_out/ -type f -name "*.out.txt" -exec rm {} \;
 find ./tests/_out/ -type f -name "*.diff.txt" -exec rm {} \;
 
-# Compile all .cpp files into executables
-mkdir -p compilado # Ensure the directory exists
-for item in *.cpp; do
-    if [[ ej -eq 0 ]] || [[ "$item" =~ ^ejercicio"$ej"\.cpp$ ]]; then
-        printf "Compilando %s\n" "$item"
-        g++ -o "./compilado/${item%.cpp}.exe" "$item" -std=c++11
-    fi
-done
-
+./scriptc.sh $ej
 
 mkdir -p ./tests/_out
 # Run each executable with each test input file
