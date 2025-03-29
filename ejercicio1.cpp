@@ -4,24 +4,25 @@
 #include <limits>
 
 #include "tads/TablaHashAbierto.cpp"
+#include "funciones/hash.cpp"
 
 using namespace std;
 
-int hasha(int key){
-    return key;
-}
-
 int main()
 {
-    TablaHashAbierto<int, string>* table = new TablaHashAbierto<int,string>(5, hasha);
+    int cantObjetos;
+    cin >> cantObjetos;
 
-    table->insert(5, "hola");
-    table->insert(4, "ads");
-    table->insert(2, "gfd");
-    table->insert(2, "hgdg");
-    table->insert(100, "qweqds");
+    TablaHashAbierto<string, int>* table = new TablaHashAbierto<string, int>(cantObjetos, stringHash1);
 
-    cout << table->get(4);
+    string mail;
+    for (int i = 0; i < cantObjetos; i++)
+    {
+        cin >> mail;
+        //el valor es un dato "dummy" ya que no se va a usar
+        table->insert(mail, i);
+    }
+    cout << table->getCount() << endl;
 
     return 0;
 }

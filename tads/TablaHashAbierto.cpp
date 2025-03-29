@@ -13,21 +13,54 @@ private:
     //Array de listas de pares
     List<ClaveValor<K,V>>** buckets;
 
+    float maxFactorCarga = 2.0;
+    float minFactorCarga = 0.8;
+
     int size = 0;
     int count = 0;
 
     //Puntero a una función que toma K y retorna int. Esta es la función de hash
     int (*fnHash) (K);
 
-    int posHash(K clave){
-        return abs(this->fnHash(clave)) % this->size;
+    int posHash(K clave, int tSize){
+        return abs(this->fnHash(clave)) % tSize;
     }
 
+    
+
+    // void rehash(bool shrink)
+    // {
+    //     int newSize = siguientePrimo(shrink ? size * 0.6 : size * 2.0);
+    //     List<ClaveValor<K,V>>** bucketsNew = new List<ClaveValor<K,V>>*[newSize];
+    //     for (int i=0; i<newSize; i++){
+    //         bucketsNew[i] = nullptr; // inicializa el array en null
+    //     }
+    //     for (int i = 0; i < size; i++)
+    //     {
+    //         List<ClaveValor<K,V>>* bucket =this->buckets[i];
+    //         if (bucket != nullptr)
+    //         {
+    //             bucketsNew[i] = bucket;
+    //             delete bucket;
+    //         }
+    //     }
+    //     delete[] buckets;
+    //     buckets = bucketsNew;
+    //     size = newSize;
+    // }
+
+    float factorDeCarga()
+    {
+        return static_cast<float>(count) / size;
+    }
+
+public:
+
     void printTable(){
-        std::cout << "{ " << std::endl;
-        for (int i=0; i<size; i++){
-            if (this->buckets[i] == nullptr) std::cout << "   null," << std::endl;
-            else {
+        std::cout << "size: " << this->size << ". count: " << this->count << ". load: " << factorDeCarga() << ". { " << std::endl;
+        for (int i=0; i<this->size; i++){
+           if (this->buckets[i] == nullptr) std::cout << "   null," << std::endl;
+           else {
                 List<ClaveValor<K,V>>* bucket = this->buckets[i];
                 std::cout << "   [ ";
                 for (int j=0; j<bucket->getSize(); j++){
@@ -35,12 +68,10 @@ private:
                     std::cout << "(" << kv.clave<< "," << kv.valor << "), ";
                 }
                 std::cout << "], " << std::endl;
-            }
+           }
         }
         std::cout << "}" << std::endl;
     }
-
-public:
 
     TablaHashAbierto (int initialSize, int(*fn)(K)) {
         this->size = siguientePrimo(initialSize * 1.5); // factor de carga de 1.5
@@ -54,7 +85,7 @@ public:
     void insert(K key, V value) override {
         this->remove(key); //Si ya existe nos aseguramos de borrarlo primero
 
-        int pos = posHash(key);
+        int pos = posHash(key, this->size);
 
         if (this->buckets[pos] == nullptr){
             this->buckets[pos] = new ListImp<ClaveValor<K,V>>();
@@ -63,10 +94,14 @@ public:
         this->buckets[pos]->insert(ClaveValor<K,V>(key, value));
 
         count++;
+        
+        // if (factorDeCarga() > maxFactorCarga){
+        //     rehash(false);
+        // }
     }
 
     V get(K key) override {
-        int pos = posHash(key);
+        int pos = posHash(key, this->size);
 
         List<ClaveValor<K,V>>* bucket = this->buckets[pos];
 
@@ -80,7 +115,7 @@ public:
     }
 
     bool contains(K key) override {
-        int pos = posHash(key);
+        int pos = posHash(key, this->size);
 
         List<ClaveValor<K,V>>* bucket = this->buckets[pos];
 
@@ -91,7 +126,7 @@ public:
     }
     
     void remove(K key) override {
-        int pos = posHash(key);
+        int pos = posHash(key, this->size);
 
         List<ClaveValor<K,V>>* bucket = this->buckets[pos];
 
@@ -106,6 +141,10 @@ public:
             delete(bucket);
             this->buckets[pos] = nullptr;
         }
+
+        // if (factorDeCarga() < minFactorCarga){
+        //     rehash(true);
+        // }
     }
 
     int getCount() override {
