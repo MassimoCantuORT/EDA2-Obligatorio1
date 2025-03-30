@@ -22,18 +22,18 @@ public:
 };
 
 template <class K, class V>
-struct ClaveValor {
-    K clave;
-    V valor;
+struct KeyValue {
+    K key;
+    V value;
     
-    ClaveValor(K unaClave, V unValor) : clave(unaClave), valor(unValor) {}
+    KeyValue(K k, V v) : key(k), value(v) {}
     //Usar este constructor solo para comparaciones
-    ClaveValor(K unaClave) : clave(unaClave) {}
+    KeyValue(K k) : key(k) {}
 
-    void setValor(K nuevoValor) { this->valor = nuevoValor; }
+    void setValue(K newValue) { this->value = newValue; }
 
-    bool operator==(ClaveValor other) { return this->clave == other.clave; }
-    bool operator==(K otherK) { return this->clave == otherK; }
+    bool operator==(KeyValue other) { return this->key == other.key; }
+    bool operator==(K otherK) { return this->key == otherK; }
 };
 
 #endif

@@ -29,19 +29,21 @@ for item in ./compilado/*.exe; do
     fi
 
     for prueba in ./tests/"$base_item"/*.in.txt; do
-        startTime=$(date "+%s%3N")
+        
         # Remove the directory path and .in.txt extension
         output_name="${prueba##*/}"          # Extract the base name of the file
         output_name="${output_name%.in.txt}" # Remove the .in.txt extension
         mkdir -p "./tests/_out/$base_item"
-
-        ./"$item" <"$prueba" | dos2unix > "./tests/_out/$base_item/${output_name}.out.txt"
+        
+        startTime=$(date "+%s%3N")
+        ./"$item" <"$prueba" | unix2dos > "./tests/_out/$base_item/${output_name}.out.txt"
+        endTime=$(date "+%s%3N")
+        
         hash1=$(sha256sum "./tests/_out/$base_item/${output_name}.out.txt" | awk '{print $1}')
         hash2=$(sha256sum "./tests/$base_item/${output_name}.out.txt" | awk '{print $1}')
 
         # Compare the hashes
         if [ "$hash1" == "$hash2" ]; then
-            endTime=$(date "+%s%3N")
             totalTime=$(($endTime - $startTime))
             echo -e "${GREEN}Prueba $prueba OK${NC} Took ${totalTime}ms"
         else

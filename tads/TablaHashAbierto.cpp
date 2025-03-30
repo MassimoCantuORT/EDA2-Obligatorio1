@@ -11,10 +11,10 @@ class TablaHashAbierto : public Tabla<K, V>
 {
 private:
     //Array de listas de pares
-    List<ClaveValor<K,V>>** buckets;
+    List<KeyValue<K,V>>** buckets;
 
-    float maxFactorCarga = 2.0;
-    float minFactorCarga = 0.8;
+    float maxLoadFactor = 2.0;
+    float minLoadFactor = 0.8;
 
     int size = 0;
     int count = 0;
@@ -25,8 +25,6 @@ private:
     int posHash(K clave, int tSize){
         return abs(this->fnHash(clave)) % tSize;
     }
-
-    
 
     // void rehash(bool shrink)
     // {
@@ -49,7 +47,7 @@ private:
     //     size = newSize;
     // }
 
-    float factorDeCarga()
+    float loadFactor()
     {
         return static_cast<float>(count) / size;
     }
@@ -57,15 +55,15 @@ private:
 public:
 
     void printTable(){
-        std::cout << "size: " << this->size << ". count: " << this->count << ". load: " << factorDeCarga() << ". { " << std::endl;
+        std::cout << "size: " << this->size << ". count: " << this->count << ". load: " << loadFactor() << ". { " << std::endl;
         for (int i=0; i<this->size; i++){
            if (this->buckets[i] == nullptr) std::cout << "   null," << std::endl;
            else {
-                List<ClaveValor<K,V>>* bucket = this->buckets[i];
+                List<KeyValue<K,V>>* bucket = this->buckets[i];
                 std::cout << "   [ ";
                 for (int j=0; j<bucket->getSize(); j++){
-                    ClaveValor<K,V> kv = bucket->get(j);
-                    std::cout << "(" << kv.clave<< "," << kv.valor << "), ";
+                    KeyValue<K,V> kv = bucket->get(j);
+                    std::cout << "(" << kv.key<< "," << kv.value << "), ";
                 }
                 std::cout << "], " << std::endl;
            }
@@ -75,7 +73,7 @@ public:
 
     TablaHashAbierto (int initialSize, int(*fn)(K)) {
         this->size = siguientePrimo(initialSize * 1.5); // factor de carga de 1.5
-        buckets = new List<ClaveValor<K,V>>*[this->size];
+        buckets = new List<KeyValue<K,V>>*[this->size];
         for (int i=0; i<this->size; i++){
             buckets[i] = nullptr; // inicializa el array en null
         }
@@ -88,13 +86,13 @@ public:
         int pos = posHash(key, this->size);
 
         if (this->buckets[pos] == nullptr){
-            this->buckets[pos] = new ListImp<ClaveValor<K,V>>();
+            this->buckets[pos] = new ListImp<KeyValue<K,V>>();
         }
 
-        this->buckets[pos]->insert(ClaveValor<K,V>(key, value));
+        this->buckets[pos]->insert(KeyValue<K,V>(key, value));
 
         count++;
-        
+
         // if (factorDeCarga() > maxFactorCarga){
         //     rehash(false);
         // }
@@ -103,36 +101,36 @@ public:
     V get(K key) override {
         int pos = posHash(key, this->size);
 
-        List<ClaveValor<K,V>>* bucket = this->buckets[pos];
+        List<KeyValue<K,V>>* bucket = this->buckets[pos];
 
         assert(bucket != nullptr && !bucket->isEmpty());
         
-        ClaveValor<K,V> testKV = ClaveValor<K,V>(key);
+        KeyValue<K,V> testKV = KeyValue<K,V>(key);
 
         bool contains = bucket->contains(testKV);
         assert(contains);
-        return bucket->getElement(testKV).valor;
+        return bucket->getElement(testKV).value;
     }
 
     bool contains(K key) override {
         int pos = posHash(key, this->size);
 
-        List<ClaveValor<K,V>>* bucket = this->buckets[pos];
+        List<KeyValue<K,V>>* bucket = this->buckets[pos];
 
         if (bucket == nullptr || bucket->isEmpty()) return false;
 
-        ClaveValor<K,V> testKV = ClaveValor<K,V>(key);
+        KeyValue<K,V> testKV = KeyValue<K,V>(key);
         return bucket->contains(testKV);
     }
     
     void remove(K key) override {
         int pos = posHash(key, this->size);
 
-        List<ClaveValor<K,V>>* bucket = this->buckets[pos];
+        List<KeyValue<K,V>>* bucket = this->buckets[pos];
 
         if (bucket == nullptr || bucket->isEmpty()) return;
 
-        ClaveValor<K,V> testKV = ClaveValor<K,V>(key);
+        KeyValue<K,V> testKV = KeyValue<K,V>(key);
         if (bucket->remove(testKV)){
             count--;
         }
