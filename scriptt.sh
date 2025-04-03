@@ -10,6 +10,7 @@ fi
 
 find ./tests/_out/ -type f -name "*.out.txt" -exec rm {} \;
 find ./tests/_out/ -type f -name "*.diff.txt" -exec rm {} \;
+find ./tests/_out/ -type f -name "order.txt" -exec rm {} \;
 
 ./scriptc.sh $ej
 
@@ -28,12 +29,14 @@ for item in ./compilado/*.exe; do
         continue
     fi
 
+    mkdir -p "./tests/_out/$base_item"
+
     for prueba in ./tests/"$base_item"/*.in.txt; do
         
+        lines=$(wc -l < $prueba | bc)
         # Remove the directory path and .in.txt extension
         output_name="${prueba##*/}"          # Extract the base name of the file
         output_name="${output_name%.in.txt}" # Remove the .in.txt extension
-        mkdir -p "./tests/_out/$base_item"
         
         startTime=$(date "+%s%3N")
         ./"$item" <"$prueba" | unix2dos > "./tests/_out/$base_item/${output_name}.out.txt"
@@ -46,6 +49,7 @@ for item in ./compilado/*.exe; do
         if [ "$hash1" == "$hash2" ]; then
             totalTime=$(($endTime - $startTime))
             echo -e "${GREEN}Prueba $prueba OK${NC} Took ${totalTime}ms"
+            echo -e "$lines, $totalTime" >> "./tests/_out/$base_item/order.txt"
         else
             echo -e "${RED}ERROR: Prueba $prueba${NC}"
             diff "./tests/_out/$base_item/${output_name}.out.txt" "./tests/$base_item/${output_name}.out.txt" > "./tests/_out/$base_item/${output_name}.diff.txt"

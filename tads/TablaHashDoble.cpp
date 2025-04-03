@@ -2,6 +2,7 @@
 #define TABLA_HASH_DOBLE
 
 #include <cassert>
+#include "KeyValue.h"
 #include "Tabla.h"
 #include "../funciones/enteros.cpp"
 

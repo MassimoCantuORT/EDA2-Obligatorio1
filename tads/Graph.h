@@ -2,7 +2,7 @@
 #define GRAFO_H
 
 template <class T>
-class Grafo
+class Graph
 {
     
 public:

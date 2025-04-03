@@ -2,6 +2,7 @@
 #define TABLA_HASH
 
 #include <cassert>
+#include "KeyValue.h"
 #include "Tabla.h"
 #include "ListImp.cpp"
 #include "../funciones/enteros.cpp"
