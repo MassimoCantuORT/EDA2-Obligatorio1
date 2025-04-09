@@ -6,7 +6,7 @@
 #include <iostream>
 
 template <class T>
-class ListImp : public List<T>
+class LinkedList : public List<T>
 {
 private:
     // define a inner class (Node) to be used by the double linked list
@@ -19,12 +19,36 @@ private:
         Node(T element, Node *next, Node *previous) : element(element), next(next), previous(previous) {}
     };
 
-    Node *head;
-    Node *tail;
+    template <class I>
+    class LinkedListIterator : public Iterator<I>
+    {
+    private:
+        Node* currentNode;
+    public:
+        LinkedListIterator(Node* head){
+            this->currentNode = head;
+        }
+
+        bool hasNext() override {
+            return currentNode != nullptr;
+        }
+        I next() override {
+            I thisElem = currentNode->element;
+            currentNode = currentNode->next;
+            return thisElem;
+        }
+    };
+
+    Node* head;
+    Node* tail;
     int size;
 
 public:
-    ListImp() : head(nullptr), size(0) {}
+    LinkedList() : head(nullptr), size(0) {}
+
+    virtual Iterator<T>* iterator() override {
+        return new LinkedListIterator<T>(this->head);
+    }
 
     void insert(T element)
     {

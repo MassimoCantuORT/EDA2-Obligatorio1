@@ -1,8 +1,10 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include "Iterator.h"
+
 template <class T>
-class List
+class List : public Iterable<T>
 {
 public:
     // pre:

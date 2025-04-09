@@ -49,3 +49,6 @@ int main()
 //Imprimir M líneas, una por cada palabra de consulta, indicando:
 // - 1 si la palabra existe en el diccionario.
 // - 0 si la palabra no existe en el diccionario.
+//La implementación debe utilizar una tabla hash cerrada con doble hashing.
+//Las palabras tendrán una longitud máxima de 20 caracteres.
+//Complejidad esperada promedio para las operaciones de búsqueda e inserción: O(1).

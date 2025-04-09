@@ -4,7 +4,7 @@
 #include <cassert>
 #include "KeyValue.h"
 #include "Tabla.h"
-#include "ListImp.cpp"
+#include "LinkedList.cpp"
 #include "../funciones/enteros.cpp"
 
 template <class K, class V>
@@ -30,7 +30,7 @@ private:
     // void rehash(bool shrink)
     // {
     //     int newSize = siguientePrimo(shrink ? size * 0.6 : size * 2.0);
-    //     List<ClaveValor<K,V>>** bucketsNew = new List<ClaveValor<K,V>>*[newSize];
+    //     List<ClaveValor<K,V>>** bucketsNew = new LinkedList<ClaveValor<K,V>>*[newSize];
     //     for (int i=0; i<newSize; i++){
     //         bucketsNew[i] = nullptr; // inicializa el array en null
     //     }
@@ -87,7 +87,7 @@ public:
         int pos = posHash(key, this->size);
 
         if (this->buckets[pos] == nullptr){
-            this->buckets[pos] = new ListImp<KeyValue<K,V>>();
+            this->buckets[pos] = new LinkedList<KeyValue<K,V>>();
         }
 
         this->buckets[pos]->insert(KeyValue<K,V>(key, value));

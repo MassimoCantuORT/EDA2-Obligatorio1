@@ -85,3 +85,5 @@ int main()
 //- La primera línea contiene un número entero positivo N (2 ≤ N ≤ 10^5), el largo del conjunto de números.
 //- Las siguientes N líneas contienen los números del conjunto.
 //Imprimir N líneas con los números ordenados en orden creciente.
+//Utilizar obligatoriamente la técnica de heapify.
+//Complejidad esperada: O(N log N)
