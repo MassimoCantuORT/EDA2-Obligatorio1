@@ -3,6 +3,8 @@
 #include <iostream>
 #include <limits>
 
+#include "tads/ListGraph.cpp"
+
 using namespace std;
 
 int main()

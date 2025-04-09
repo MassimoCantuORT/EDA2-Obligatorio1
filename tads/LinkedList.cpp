@@ -6,12 +6,9 @@
 #include <iostream>
 
 template <class T>
-class LinkedList : public List<T>
-{
-private:
+class LinkedList : public List<T> {
     // define a inner class (Node) to be used by the double linked list
-    class Node
-    {
+    class Node {
     public:
         T element;
         Node *next;
@@ -20,8 +17,7 @@ private:
     };
 
     template <class I>
-    class LinkedListIterator : public Iterator<I>
-    {
+    class LinkedListIterator : public Iterator<I> {
     private:
         Node* currentNode;
     public:
