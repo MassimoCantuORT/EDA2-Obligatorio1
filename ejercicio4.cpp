@@ -4,12 +4,92 @@
 #include <limits>
 
 #include "tads/ListGraph.cpp"
+#include "tads/MinPriorityQueue.cpp"
 
 using namespace std;
 
+void printMatrix(int** matrix, int verts){
+    cout << "   || ";
+    for (int i = 1; i <= verts; i++) {
+        cout << i << (i < 10 ? "  | " : (i<100? " | " : "| "));
+    }
+    cout << endl << "=====";
+    for (int i = 1; i <= verts; i++) {
+        cout << "=====";
+    }
+    cout << endl;
+    for (int i = 1; i <= verts; i++) {
+        cout << i << (i < 10 ? "  || " : (i<100? " || " : "|| "));
+        for (int j = 1; j <= verts; j++) {
+            int w = matrix[i][j];
+            if (w == -1) cout << "   | ";
+            else {
+                cout << w << (w < 10 ? "  | " : " | ");
+            }
+        }
+        cout << endl;
+    }
+}
+
+int* dijkstra (Graph* g, int origin){
+    int v = g->vertexCount();
+    int* costos = new int[v+1];
+    for (int i=1; i<=v; i++){
+        costos[i] = INT_MAX; //inicializamos en INT_MAX para facilitar los calculos, pero despues los vamos a settear en -1
+    }
+    costos[origin] = 0; //inicializamos en 0 para facilitar los calculos, pero despues lo vamos a settear en -1
+
+    int* comingFrom = new int[v+1]();
+    comingFrom[origin] = origin;
+
+	PriorityQueue<int, int>* pq = new MinPriorityQueue<int, int>(v+1);
+	pq->enqueue(origin, 0);
+	while (!pq->isEmpty()){
+		int v = pq->dequeue();
+        Iterator<Edge>* adj = g->getAdjacentEdges(v);
+		while (adj->hasNext()){
+            Edge e = adj->next();
+            int v2 = e.to;
+			if (costos[v2] > costos[v] + e.weight){
+				costos[v2] = costos[v] + e.weight;
+				comingFrom[v2] = v;
+				pq->enqueue(v2, costos[v2]);
+			}
+		}
+	}
+
+    //comingFrom no se utiliza por ahora
+    return costos;
+}
+
 int main()
 {
-    // TODO
+    //READ
+    int verts, edges;
+    cin >> verts;
+    cin >> edges;
+
+    Graph* g = new ListGraph(verts, true, true);
+    for (int i = 0; i < edges; i++) {
+        int v1, v2, w;
+        cin >> v1 >> v2 >> w;
+        g->addEdge(v1, v2, w);
+    }
+
+    int calcVerts;
+    cin >> calcVerts;
+
+    for (int i = 0; i < calcVerts; i++) {
+        int v;
+        cin >> v;
+        int* minTotalCosts = dijkstra(g, v);
+        minTotalCosts[v] = -1; //La letra pide que el mismo vert sea -1
+        for (int j = 1; j <= verts; j++) {
+            if (minTotalCosts[j] == INT_MAX) minTotalCosts[j] = -1; //los vertices sin alcanzar tambien deberian ser -1
+            cout << minTotalCosts[j] << endl;
+        }
+    }
+
     return 0;
 }
 
