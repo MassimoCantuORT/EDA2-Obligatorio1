@@ -8,6 +8,7 @@
 
 using namespace std;
 
+//función puramente para debuggear el grafo
 void printMatrix(int** matrix, int verts){
     cout << "   || ";
     for (int i = 1; i <= verts; i++) {
@@ -39,8 +40,9 @@ int* dijkstra (Graph* g, int origin){
     }
     costos[origin] = 0; //inicializamos en 0 para facilitar los calculos, pero despues lo vamos a settear en -1
 
-    int* comingFrom = new int[v+1]();
-    comingFrom[origin] = origin;
+    //comingFrom al final no se usa, pero ya lo implementé asi que xd
+    //int* comingFrom = new int[v+1]();
+    //comingFrom[origin] = origin;
 
 	PriorityQueue<int, int>* pq = new MinPriorityQueue<int, int>(v+1);
 	pq->enqueue(origin, 0);
@@ -52,13 +54,12 @@ int* dijkstra (Graph* g, int origin){
             int v2 = e.to;
 			if (costos[v2] > costos[v] + e.weight){
 				costos[v2] = costos[v] + e.weight;
-				comingFrom[v2] = v;
+				//comingFrom[v2] = v;
 				pq->enqueue(v2, costos[v2]);
 			}
 		}
 	}
 
-    //comingFrom no se utiliza por ahora
     return costos;
 }
 
@@ -75,7 +76,7 @@ int main()
         cin >> v1 >> v2 >> w;
         g->addEdge(v1, v2, w);
     }
-
+    
     int calcVerts;
     cin >> calcVerts;
 

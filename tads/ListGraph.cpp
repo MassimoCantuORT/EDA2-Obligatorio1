@@ -8,6 +8,7 @@
 class ListGraph : public Graph {
     //El peso es -1 cuando la arista no existe (importante)
     const int NO_EDGE_WEIGHT = -1;
+    const int DEFAULT_WEIGHT = 0;
 
     bool directed;
     bool weighted;
@@ -32,18 +33,21 @@ public:
         this->weighted = weighted;
     }
 
-    Iterator<Edge>* getAllEdges() {
-        //TO-DO
-        assert(false);
+    Iterator<Edge>* getAllEdges() override {
+        List<Edge>* allEdges = new LinkedList<Edge>();
+        for (int i=1; i<=vertices; i++){
+            allEdges->insertAll(adjacencies[i]->iterator());
+        }
+        return allEdges->iterator();
     }
-    int vertexCount() {
+    int vertexCount() override {
         return this->vertices;
     }
-    Iterator<Edge>* getAdjacentEdges(int v) {
+    Iterator<Edge>* getAdjacentEdges(int v) override {
         assert(vertExists(v));
         return adjacencies[v]->iterator();
     }
-    bool hasEdge(int v1, int v2) {
+    bool hasEdge(int v1, int v2) override {
         assert(vertExists(v1) && vertExists(v2));
         
         Iterator<Edge>* neighbors = getAdjacentEdges(v1);
@@ -53,29 +57,52 @@ public:
         }
         return false;
     }
-    int getWeight(int v1, int v2) {
+    int getWeight(int v1, int v2) override {
         assert(vertExists(v1) && vertExists(v2));
+
+        if (!weighted) return DEFAULT_WEIGHT;
+
         Iterator<Edge>* neighbors = getAdjacentEdges(v1);
         while (neighbors->hasNext()){
             Edge edge = neighbors->next();
             if (edge.to == v2) return edge.weight;
         }
+
         return NO_EDGE_WEIGHT; //la arista no existe
     }
-    void addEdge(int v1, int v2, int weight) {
+
+    void addEdge(int v1, int v2) override {
+        addEdge(v1, v2, DEFAULT_WEIGHT);
+    }
+
+    void addEdge(int v1, int v2, int weight) override {
         assert(vertExists(v1) && vertExists(v2));
         assert(weight >= 0);
+
+        if (!weighted) weight = DEFAULT_WEIGHT;
+
         removeEdge(v1, v2);
-        
         adjacencies[v1]->insert(Edge(v1, v2, weight));
+
+        if (!directed){
+            adjacencies[v2]->insert(Edge(v2, v1, weight));
+        }
+
         edgeCount++;
     }
-    void removeEdge(int v1, int v2) {
+    void removeEdge(int v1, int v2) override {
         assert(vertExists(v1) && vertExists(v2));
+
         adjacencies[v1]->remove(Edge(v1, v2));
+
+        if (!directed){
+            adjacencies[v2]->remove(Edge(v2, v1));
+        }
+
         edgeCount--;
     }
-    int** getAdjMatrix() {
+
+    int** getAdjMatrix() override {
         int** matrix = new int*[vertices+1];
         for (int i=1; i<=vertices; i++){
             matrix[i] = new int[vertices+1];

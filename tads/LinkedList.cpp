@@ -46,8 +46,7 @@ public:
         return new LinkedListIterator<T>(this->head);
     }
 
-    void insert(T element)
-    {
+    void insert(T element) override {
         Node *newNode = new Node(element, nullptr, this->tail);
         if (isEmpty())
         {
@@ -62,8 +61,7 @@ public:
         size++;
     }
 
-    void insertAt(int index, T element)
-    {
+    void insertAt(int index, T element) override {
         assert(index >= 0 && index < size);
         Node *newNode = new Node(element, nullptr, nullptr);
         if (index == 0)
@@ -93,8 +91,7 @@ public:
         size++;
     }
 
-    bool remove(T element)
-    {
+    bool remove(T element) override {
         Node *current = head;
         while (current != nullptr)
         {
@@ -131,8 +128,7 @@ public:
         return false;
     }
 
-    void removeAt(int index)
-    {
+    void removeAt(int index) override {
         assert(index >= 0 && index < size);
         Node *current = head;
         for (int i = 0; i < index; i++)
@@ -164,13 +160,11 @@ public:
         size--;
     }
 
-    bool isEmpty()
-    {
+    bool isEmpty() override {
         return head == nullptr;
     }
 
-    T get(int index)
-    {
+    T get(int index) override {
         assert(index >= 0 && index < size);
         Node *current = head;
         for (int i = 0; i < index; i++)
@@ -180,8 +174,7 @@ public:
         return current->element;
     }
 
-    T getElement(T element)
-    {
+    T getElement(T element) override {
         Node *current = head;
         while (current != nullptr)
         {
@@ -195,8 +188,7 @@ public:
         assert(false); //element did not exist
     }
 
-    bool contains(T element)
-    {
+    bool contains(T element) override {
         Node *current = head;
         while (current != nullptr)
         {
@@ -211,9 +203,14 @@ public:
         return false;
     }
 
-    int getSize()
-    {
+    int getSize() override {
         return size;
+    }
+
+    void insertAll(Iterator<T>* iter) override {
+        while (iter->hasNext()){
+            insert(iter->next());
+        }
     }
 };
 

@@ -24,6 +24,7 @@ public:
     virtual Iterator<Edge>* getAdjacentEdges(int v) = 0;
     virtual bool hasEdge(int v1, int v2) = 0;
     virtual int getWeight(int v1, int v2) = 0;
+    virtual void addEdge(int v1, int v2) = 0;
     virtual void addEdge(int v1, int v2, int weight) = 0;
     virtual void removeEdge(int v1, int v2) = 0;
     virtual int** getAdjMatrix() = 0;

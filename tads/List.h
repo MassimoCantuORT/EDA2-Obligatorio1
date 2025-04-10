@@ -44,6 +44,8 @@ public:
     // pre: -
     // post: returns whether an element exists that equals the given element
     virtual bool contains(T element) = 0;
+
+    virtual void insertAll(Iterator<T>* iter) = 0;
 };
 
 #endif
