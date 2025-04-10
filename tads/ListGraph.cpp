@@ -5,8 +5,9 @@
 #include "Graph.h"
 #include "LinkedList.cpp"
 
-template <class T>
-class ListGraph : public Graph<T> {
+class ListGraph : public Graph {
+    //El peso es -1 cuando la arista no existe (importante)
+    const int NO_EDGE_WEIGHT = -1;
 
     bool directed;
     bool weighted;
@@ -18,6 +19,7 @@ class ListGraph : public Graph<T> {
     bool vertExists(int v){
         return v <= vertices && v > 0;
     }
+
 public:
 
     ListGraph(int size, bool directed, bool weighted){
@@ -58,10 +60,11 @@ public:
             Edge edge = neighbors->next();
             if (edge.to == v2) return edge.weight;
         }
-        assert(false); //el la arista no existe
+        return NO_EDGE_WEIGHT; //la arista no existe
     }
     void addEdge(int v1, int v2, int weight) {
         assert(vertExists(v1) && vertExists(v2));
+        assert(weight >= 0);
         removeEdge(v1, v2);
         
         adjacencies[v1]->insert(Edge(v1, v2, weight));
@@ -73,15 +76,16 @@ public:
         edgeCount--;
     }
     int** getAdjMatrix() {
-        int** matrix = new int[vertices+1][vertices+1];
+        int** matrix = new int*[vertices+1];
         for (int i=1; i<=vertices; i++){
+            matrix[i] = new int[vertices+1];
             List<Edge>* adj = adjacencies[i];
             for (int j=1; j<=vertices; j++){
                 Edge edge = Edge(i, j);
                 if (adj->contains(edge)){
                     matrix[i][j] = adj->getElement(edge).weight;
                 } else {
-                    matrix[i][j] = INT_MAX;
+                    matrix[i][j] = NO_EDGE_WEIGHT;
                 }
                 
             }

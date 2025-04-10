@@ -16,7 +16,6 @@ struct Edge{
     }
 };
 
-template <class T>
 class Graph
 {
 public:
