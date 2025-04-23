@@ -11,7 +11,6 @@ using namespace std;
 //usamos orden topológico (algoritmo de Kahn)
 bool findAllCycles(Graph* g){
     int v = g->vertexCount();
-    int e = g->edgeCount();
     int visited = 0;
     int* vertDegree = new int[v+1]();
 
@@ -24,16 +23,17 @@ bool findAllCycles(Graph* g){
         }
     }
 
-    PriorityQueue<int, int>* degrees = new MinPriorityQueue<int, int>(v + 1); //queue y dequeue O(log(V))
+    //Una queue regular sirve, pero uso priority queue para no tener que programar otro tad
+    PriorityQueue<int, int>* queue = new MinPriorityQueue<int, int>(v + 1); //queue y dequeue O(log(V))
 
     for (int i=1; i<=v; i++){ //O(V)
         if (vertDegree[i] == 0){
-            degrees->enqueue(i, i);
+            queue->enqueue(i, i);
         }
     }
     
-    while (!degrees->isEmpty()){ //O(V + E) p.c
-        int next = degrees->dequeue();
+    while (!queue->isEmpty()){ //O(V + E) p.c
+        int next = queue->dequeue();
         visited++;
 
         //bajamos el grado de incidencia de los vertices adjacentes
@@ -42,17 +42,16 @@ bool findAllCycles(Graph* g){
             Edge e = edges->next();
             vertDegree[e.to]--;
             if (vertDegree[e.to] == 0){
-                degrees->enqueue(e.to, e.to);
+                queue->enqueue(e.to, e.to);
             }
         }
     }
 
-    return visited != v;
+    return visited != v; //Si no visitamos todos entonces el algoritmo terminó antes. Esto solo sucede si hay un ciclo.
 }
 
 int main()
 {
-    //READ
     int verts, edges;
     cin >> verts;
     cin >> edges;
