@@ -15,7 +15,7 @@ class ListGraph : public Graph {
 
     List<Edge>** adjacencies;
     int vertices;
-    int edgeCount;
+    int edges;
     
     bool vertExists(int v){
         return v <= vertices && v > 0;
@@ -39,6 +39,9 @@ public:
             allEdges->insertAll(adjacencies[i]->iterator());
         }
         return allEdges->iterator();
+    }
+    int edgeCount() override {
+        return this->edges;
     }
     int vertexCount() override {
         return this->vertices;
@@ -88,7 +91,7 @@ public:
             adjacencies[v2]->insert(Edge(v2, v1, weight));
         }
 
-        edgeCount++;
+        edges++;
     }
     void removeEdge(int v1, int v2) override {
         assert(vertExists(v1) && vertExists(v2));
@@ -99,7 +102,7 @@ public:
             adjacencies[v2]->remove(Edge(v2, v1));
         }
 
-        edgeCount--;
+        edges--;
     }
 
     int** getAdjMatrix() override {

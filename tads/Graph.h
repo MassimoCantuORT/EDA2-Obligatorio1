@@ -20,6 +20,7 @@ class Graph
 {
 public:
     virtual Iterator<Edge>* getAllEdges() = 0;
+    virtual int edgeCount() = 0;
     virtual int vertexCount() = 0;
     virtual Iterator<Edge>* getAdjacentEdges(int v) = 0;
     virtual bool hasEdge(int v1, int v2) = 0;

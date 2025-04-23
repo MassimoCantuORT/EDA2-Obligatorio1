@@ -1,5 +1,5 @@
-#ifndef TABLA_HASH
-#define TABLA_HASH
+#ifndef MIN_PRIO_QUEUE
+#define MIN_PRIO_QUEUE
 
 #include "KeyValue.h"
 #include "PriorityQueue.h"
@@ -11,7 +11,7 @@ private:
     KeyValue<E, P>** array;
     int arrSize;
     int count;
-
+    
     bool isAGreaterThanB(int a, int b){
         return this->array[a]->value > this->array[b]->value;
     }
@@ -75,16 +75,21 @@ public:
     }
 
     E dequeue() override {
-        E top = this->top();
+        E top = this->peek();
         swap(1, count);
         count--;
         siftDown(1);
         return top;
     }
 
-    E top() override {
+    E peek() override {
         assert(this->count > 0);
         return array[1]->key;
+    }
+
+    P peekPriority() override {
+        assert(this->count > 0);
+        return array[1]->value;
     }
     
     int getCount() override {
