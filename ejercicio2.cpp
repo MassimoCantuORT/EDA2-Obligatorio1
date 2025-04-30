@@ -3,7 +3,7 @@
 #include <iostream>
 #include <limits>
 
-#include "tads/TablaHashDoble.cpp"
+#include "tads/HashTableDoubleHash.cpp"
 #include "funciones/hash.cpp"
 
 using namespace std;
@@ -13,7 +13,7 @@ int main()
     int cantDict;
     cin >> cantDict;
 
-    TablaHashDoble<string, int>* table = new TablaHashDoble<string, int>(cantDict, stringHash1, stringHash2);
+    HashTableDoubleHash<string, int>* table = new HashTableDoubleHash<string, int>(cantDict, stringHash1, stringHash2);
 
     string palabra;
     for (int i = 0; i < cantDict; i++)

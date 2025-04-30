@@ -3,7 +3,7 @@
 #include <iostream>
 #include <limits>
 
-#include "tads/TablaHashAbierto.cpp"
+#include "tads/HashTableOpen.cpp"
 #include "funciones/hash.cpp"
 
 using namespace std;
@@ -13,7 +13,7 @@ int main()
     int cantObjetos;
     cin >> cantObjetos;
 
-    TablaHashAbierto<string, int>* table = new TablaHashAbierto<string, int>(cantObjetos, stringHash1);
+    HashTableOpen<string, int>* table = new HashTableOpen<string, int>(cantObjetos, stringHash1);
 
     string mail;
     for (int i = 0; i < cantObjetos; i++)

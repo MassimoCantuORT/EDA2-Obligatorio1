@@ -3,11 +3,11 @@
 
 #include <cassert>
 #include "KeyValue.h"
-#include "Tabla.h"
+#include "Table.h"
 #include "../funciones/enteros.cpp"
 
 template <class K, class V>
-class TablaHashDoble : public Tabla<K, V>
+class HashTableDoubleHash : public Table<K, V>
 {
 private:
 
@@ -47,7 +47,7 @@ public:
         std::cout << "}" << std::endl;
     }
 
-    TablaHashDoble (int initialSize, int(*fn1)(K),  int(*fn2)(K)) {
+    HashTableDoubleHash (int initialSize, int(*fn1)(K),  int(*fn2)(K)) {
         this->size = siguientePrimo(initialSize * 1.5); // factor de carga de 1.5
         table = new KeyValue<K,V>*[this->size];
         erased = new bool[this->size];

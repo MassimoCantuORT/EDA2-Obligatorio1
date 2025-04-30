@@ -2,7 +2,7 @@
 #define TABLA_H
 
 template <class K, class V>
-class Tabla
+class Table
 {
 
 public:

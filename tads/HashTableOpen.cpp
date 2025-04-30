@@ -3,12 +3,12 @@
 
 #include <cassert>
 #include "KeyValue.h"
-#include "Tabla.h"
+#include "Table.h"
 #include "LinkedList.cpp"
 #include "../funciones/enteros.cpp"
 
 template <class K, class V>
-class TablaHashAbierto : public Tabla<K, V>
+class HashTableOpen : public Table<K, V>
 {
 private:
     //Array de listas de pares
@@ -72,7 +72,7 @@ public:
         std::cout << "}" << std::endl;
     }
 
-    TablaHashAbierto (int initialSize, int(*fn)(K)) {
+    HashTableOpen (int initialSize, int(*fn)(K)) {
         this->size = siguientePrimo(initialSize * 1.5); // factor de carga de 1.5
         buckets = new List<KeyValue<K,V>>*[this->size];
         for (int i=0; i<this->size; i++){
