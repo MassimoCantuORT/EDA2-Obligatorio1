@@ -73,7 +73,8 @@ public:
     }
 
     HashTableOpen (int initialSize, int(*fn)(K)) {
-        this->size = siguientePrimo(initialSize * 1.5); // factor de carga de 1.5
+        this->size = initialSize * 1.5;
+        //this->size = siguientePrimo(initialSize * 1.5); // factor de carga de 1.5
         buckets = new List<KeyValue<K,V>>*[this->size];
         for (int i=0; i<this->size; i++){
             buckets[i] = nullptr; // inicializa el array en null
