@@ -84,7 +84,6 @@ public:
 
         if (!weighted) weight = DEFAULT_WEIGHT;
 
-        removeEdge(v1, v2);
         adjacencies[v1]->insert(Edge(v1, v2, weight));
 
         if (!directed){

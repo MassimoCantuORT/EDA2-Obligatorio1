@@ -34,11 +34,13 @@ void printMatrix(int** matrix, int verts){
 
 int* dijkstra (Graph* g, int origin){
     int v = g->vertexCount();
+    bool* visitados = new bool[v+1]();
     int* costos = new int[v+1];
     for (int i=1; i<=v; i++){
         costos[i] = INT_MAX; //inicializamos en INT_MAX para facilitar los calculos, pero despues los vamos a settear en -1
     }
     costos[origin] = 0; //inicializamos en 0 para facilitar los calculos, pero despues lo vamos a settear en -1
+    visitados[origin] = true;
 
     //comingFrom al final no se usa, pero ya lo implementé asi que xd
     //int* comingFrom = new int[v+1]();
@@ -48,11 +50,12 @@ int* dijkstra (Graph* g, int origin){
 	pq->enqueue(origin, 0);
 	while (!pq->isEmpty()){
 		int v = pq->dequeue();
+        visitados[v] = true;
         Iterator<Edge>* adj = g->getAdjacentEdges(v);
 		while (adj->hasNext()){
             Edge e = adj->next();
             int v2 = e.to;
-			if (costos[v2] > costos[v] + e.weight){
+			if (!visitados[v2] && costos[v2] > costos[v] + e.weight){
 				costos[v2] = costos[v] + e.weight;
 				//comingFrom[v2] = v;
 				pq->enqueue(v2, costos[v2]);
