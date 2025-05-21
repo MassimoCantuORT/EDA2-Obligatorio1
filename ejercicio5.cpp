@@ -15,7 +15,7 @@ bool findAllCycles(Graph* g){
     int* vertDegree = new int[v+1]();
 
     //colocamos los grados
-    for (int i=1; i<=v; i++){ //O(V + E)
+    for (int i=1; i<=v; i++){ //O(E)
         Iterator<Edge>* edges = g->getAdjacentEdges(i);
         while (edges->hasNext()){ 
             Edge e = edges->next();
@@ -24,7 +24,7 @@ bool findAllCycles(Graph* g){
     }
 
     //Una queue regular sirve, pero uso priority queue para no tener que programar otro tad
-    PriorityQueue<int, int>* queue = new MinPriorityQueue<int, int>(v + 1); //queue y dequeue O(log(V))
+    PriorityQueue<int, int>* queue = new MinPriorityQueue<int, int>(v + 1); //queue y dequeue O(1) c.p
 
     for (int i=1; i<=v; i++){ //O(V)
         if (vertDegree[i] == 0){
@@ -33,11 +33,11 @@ bool findAllCycles(Graph* g){
     }
     
     while (!queue->isEmpty()){ //O(V + E) p.c
-        int next = queue->dequeue();
+        int next = queue->dequeue(); 
         visited++;
 
         //bajamos el grado de incidencia de los vertices adjacentes
-        Iterator<Edge>* edges = g->getAdjacentEdges(next); //cada V se visita una sola vez asi que peor caso de todo es O(E)
+        Iterator<Edge>* edges = g->getAdjacentEdges(next); //cada E se visita una sola vez asi que peor caso de todo es O(E)
         while (edges->hasNext()){
             Edge e = edges->next();
             vertDegree[e.to]--;
