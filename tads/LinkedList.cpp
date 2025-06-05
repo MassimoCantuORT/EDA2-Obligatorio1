@@ -3,14 +3,12 @@
 
 #include "List.h"
 #include <cassert>
+#include <iostream>
 
 template <class T>
-class ListImp : public List<T>
-{
-private:
+class LinkedList : public List<T> {
     // define a inner class (Node) to be used by the double linked list
-    class Node
-    {
+    class Node {
     public:
         T element;
         Node *next;
@@ -18,15 +16,37 @@ private:
         Node(T element, Node *next, Node *previous) : element(element), next(next), previous(previous) {}
     };
 
-    Node *head;
-    Node *tail;
+    template <class I>
+    class LinkedListIterator : public Iterator<I> {
+    private:
+        Node* currentNode;
+    public:
+        LinkedListIterator(Node* head){
+            this->currentNode = head;
+        }
+
+        bool hasNext() override {
+            return currentNode != nullptr;
+        }
+        I next() override {
+            I thisElem = currentNode->element;
+            currentNode = currentNode->next;
+            return thisElem;
+        }
+    };
+
+    Node* head;
+    Node* tail;
     int size;
 
 public:
-    ListImp() : head(nullptr), size(0) {}
+    LinkedList() : head(nullptr), size(0) {}
 
-    void insert(T element)
-    {
+    virtual Iterator<T>* iterator() override {
+        return new LinkedListIterator<T>(this->head);
+    }
+
+    void insert(T element) override {
         Node *newNode = new Node(element, nullptr, this->tail);
         if (isEmpty())
         {
@@ -41,8 +61,7 @@ public:
         size++;
     }
 
-    void insertAt(int index, T element)
-    {
+    void insertAt(int index, T element) override {
         assert(index >= 0 && index < size);
         Node *newNode = new Node(element, nullptr, nullptr);
         if (index == 0)
@@ -72,8 +91,7 @@ public:
         size++;
     }
 
-    void remove(T element)
-    {
+    bool remove(T element) override {
         Node *current = head;
         while (current != nullptr)
         {
@@ -103,14 +121,14 @@ public:
                 }
                 delete current;
                 size--;
-                return;
+                return true;
             }
             current = current->next;
         }
+        return false;
     }
 
-    void removeAt(int index)
-    {
+    void removeAt(int index) override {
         assert(index >= 0 && index < size);
         Node *current = head;
         for (int i = 0; i < index; i++)
@@ -142,13 +160,11 @@ public:
         size--;
     }
 
-    bool isEmpty()
-    {
+    bool isEmpty() override {
         return head == nullptr;
     }
 
-    T get(int index)
-    {
+    T get(int index) override {
         assert(index >= 0 && index < size);
         Node *current = head;
         for (int i = 0; i < index; i++)
@@ -158,9 +174,43 @@ public:
         return current->element;
     }
 
-    int getSize()
-    {
+    T getElement(T element) override {
+        Node *current = head;
+        while (current != nullptr)
+        {
+            // note: that the elment should implement == operator
+            if (current->element == element)
+            {
+                return current->element;
+            }
+            current = current->next;
+        }
+        assert(false); //element did not exist
+    }
+
+    bool contains(T element) override {
+        Node *current = head;
+        while (current != nullptr)
+        {
+            
+            // note: that the elment should implement == operator
+            if (current->element == element)
+            {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
+    }
+
+    int getSize() override {
         return size;
+    }
+
+    void insertAll(Iterator<T>* iter) override {
+        while (iter->hasNext()){
+            insert(iter->next());
+        }
     }
 };
 
