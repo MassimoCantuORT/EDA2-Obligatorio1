@@ -33,6 +33,9 @@ class LinkedList : public List<T> {
             currentNode = currentNode->next;
             return thisElem;
         }
+        I peek() override {
+            return currentNode->element;
+        }
     };
 
     Node* head;
