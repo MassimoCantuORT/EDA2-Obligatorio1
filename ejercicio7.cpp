@@ -49,7 +49,7 @@ int main()
 
     //cout << "[" << digits[0] << "," << digits[1] << "," << digits[2] << "," << digits[3] << "," << digits[4] << "," << digits[5] << "," << digits[6] << "," << digits[7] << "," << digits[8] << "," << digits[9] << "]" <<endl;
 
-    //first find pairs
+    //primero los pares
     string firstHalf = constructHalf(digits);
     if (firstHalf == ""){
         cout << "No" << endl;
@@ -57,7 +57,7 @@ int main()
     }
     //cout << firstHalf << endl;
     
-    //then find largest number for the center
+    //el mayor numero que queda va al centro, si existe
     char* centerDigit = findLargestDigit(digits);
 
     string result;
@@ -71,7 +71,7 @@ int main()
         result += firstHalf[i];
     }
 
-    //Usamos todos los números
+    //Usamos todos los números?
     if (result.length() != originalLen){
         cout << "No" << endl;
         return 0;
