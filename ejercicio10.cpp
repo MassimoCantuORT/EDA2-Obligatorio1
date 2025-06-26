@@ -7,14 +7,14 @@
 using namespace std;
 
 struct Pos{
-    int col;
     int row;
+    int col;
 };
 
 Pos getPosition(int position, int columns){
-    int col = position / columns;
-    int row = position % columns;
-    return Pos{col, row};
+    int row = position / columns;
+    int col = position % columns;
+    return Pos{row, col};
 }
 
 bool areNoneRepeating(int* array, int length){
@@ -36,21 +36,22 @@ bool checkArea(int** baseTable, int** answerTable, int rows, int columns, int nu
     int chunkCol = position.col / 3;
     int chunkRow = position.row / 3;
 
-    cout << "w: " << chunkWidth << " h: " << chunkHeight <<endl;
+    // cout << "w: " << chunkWidth << " h: " << chunkHeight <<endl;
     int* numbers = new int[chunkWidth*chunkHeight + 1];
     for (int col=(chunkCol*chunkWidth); col<(chunkCol+1)*chunkWidth; col++){
         for (int row=(chunkRow*chunkHeight); row<(chunkRow+1)*chunkHeight; row++){
+            cout << row << "|" << col << endl;
             int val = (position.col == col && position.row == row) ? numberToCheck : baseTable[row][col];
             if (val == 0) val = answerTable[row][col];
             if (val == 0) return true;
             numbers[val] ++;
         }
     }
-    cout << "checking " << numberToCheck << " ";
-    for (int i=0;i<=max(rows, columns);i++){
-         cout << i << ":" << numbers[i] << " ";
-    }
-    cout << endl;
+    // cout << "checking " << numberToCheck << " ";
+    // for (int i=0;i<=max(rows, columns);i++){
+    //      cout << i << ":" << numbers[i] << " ";
+    // }
+    // cout << endl;
     return areNoneRepeatingOrMissing(numbers, chunkWidth*chunkHeight + 1);
 }
 bool checkHorizontal(int** baseTable, int** answerTable, int rows, int columns, int numberToCheck, Pos position){
@@ -59,7 +60,6 @@ bool checkHorizontal(int** baseTable, int** answerTable, int rows, int columns, 
     for (int col=0; col<columns; col++){
         int val = position.col == col ? numberToCheck : baseTable[row][col];
         if (val == 0) val = answerTable[row][col];
-        if (val == 0) return true;
         numbers[val] ++;
     }
     return areNoneRepeating(numbers, max(rows, columns) + 1);
@@ -70,9 +70,13 @@ bool checkVertical(int** baseTable, int** answerTable, int rows, int columns, in
     for (int row=0; row<rows; row++){
         int val = position.row == row ? numberToCheck : baseTable[row][col];
         if (val == 0) val = answerTable[row][col];
-        if (val == 0) return true;
         numbers[val]++;
     }
+    // cout << "checking " << numberToCheck << " ";
+    // for (int i=0;i<=max(rows, columns);i++){
+    //      cout << i << ":" << numbers[i] << " ";
+    // }
+    // cout << endl;
     return areNoneRepeating(numbers, max(rows, columns) + 1);
 }
 
@@ -101,6 +105,16 @@ void storeSolutionInBase(int** baseTable, int** answerTable, int rows, int colum
     }
 }
 
+void printTable(int** table, int rows, int columns){
+    for (int i=0; i<rows; i++){
+        for (int j=0; j<columns; j++){
+            cout << table[i][j];
+            if (j != columns-1) cout << " ";
+        }
+        cout << endl;
+    }
+}
+
 void backtracking(int** baseTable, int** answerTable, int rows, int columns, int currentPosition) {
     Pos pos = getPosition(currentPosition, columns);
 	while (validPosition(currentPosition, rows, columns) && hasData(baseTable, pos)){
@@ -111,7 +125,9 @@ void backtracking(int** baseTable, int** answerTable, int rows, int columns, int
         storeSolutionInBase(baseTable, answerTable, rows, columns);
 		return;
 	} else {
-        cout << pos.col << "|" << pos.row << endl;
+        //cout << pos.row << "|" << pos.col << endl;
+        //  printTable(answerTable, rows, columns);
+        //  cout <<endl;
         for(int i=1; i<=max(columns, rows); i++) {
 			if(answerValid(baseTable, answerTable, rows, columns, i, pos)) {
 				answerTable[pos.row][pos.col] = i;
@@ -142,12 +158,7 @@ int main()
 
     backtracking(table, answer, rows, columns, 0);
 
-    for (int i=0; i<rows; i++){
-        for (int j=0; j<columns; j++){
-            cout << table[i][j] << " ";
-        }
-        cout << endl;
-    }
+    printTable(table, rows, columns);
 
     return 0;
 }
