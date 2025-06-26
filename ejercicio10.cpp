@@ -31,19 +31,22 @@ bool areNoneRepeatingOrMissing(int* array, int length){
 }
 
 bool checkArea(int** baseTable, int** answerTable, int rows, int columns, int numberToCheck, Pos position){
-    int chunkWidth = columns / 3;
     int chunkHeight = rows / 3;
-    int chunkCol = position.col / 3;
-    int chunkRow = position.row / 3;
+    int chunkWidth = columns / 3;
+    int chunkRow = position.row / chunkHeight;
+    int chunkCol = position.col / chunkWidth;
 
-    // cout << "w: " << chunkWidth << " h: " << chunkHeight <<endl;
+    // cout << "CHUNK:" << chunkRow << "|" <<chunkCol << endl;
     int* numbers = new int[chunkWidth*chunkHeight + 1];
-    for (int col=(chunkCol*chunkWidth); col<(chunkCol+1)*chunkWidth; col++){
-        for (int row=(chunkRow*chunkHeight); row<(chunkRow+1)*chunkHeight; row++){
-            cout << row << "|" << col << endl;
+    int rowStart = chunkRow * chunkHeight;
+    int rowEnd = rowStart + chunkHeight;
+    int colStart = chunkCol * chunkWidth;
+    int colEnd = colStart + chunkWidth;
+    for (int row=rowStart; row<rowEnd; row++){
+        for (int col=colStart; col<colEnd; col++){
+            // cout << "CHUNK:" << chunkRow << "*" << chunkHeight << "|" <<chunkCol << "*" << chunkWidth << " POS:" << row << "|" << col << endl;
             int val = (position.col == col && position.row == row) ? numberToCheck : baseTable[row][col];
             if (val == 0) val = answerTable[row][col];
-            if (val == 0) return true;
             numbers[val] ++;
         }
     }
@@ -51,8 +54,9 @@ bool checkArea(int** baseTable, int** answerTable, int rows, int columns, int nu
     // for (int i=0;i<=max(rows, columns);i++){
     //      cout << i << ":" << numbers[i] << " ";
     // }
-    // cout << endl;
-    return areNoneRepeatingOrMissing(numbers, chunkWidth*chunkHeight + 1);
+    bool valid = areNoneRepeating(numbers, chunkWidth*chunkHeight + 1);
+    //cout << "     " << valid << endl;
+    return valid;
 }
 bool checkHorizontal(int** baseTable, int** answerTable, int rows, int columns, int numberToCheck, Pos position){
     int row = position.row;
@@ -72,11 +76,6 @@ bool checkVertical(int** baseTable, int** answerTable, int rows, int columns, in
         if (val == 0) val = answerTable[row][col];
         numbers[val]++;
     }
-    // cout << "checking " << numberToCheck << " ";
-    // for (int i=0;i<=max(rows, columns);i++){
-    //      cout << i << ":" << numbers[i] << " ";
-    // }
-    // cout << endl;
     return areNoneRepeating(numbers, max(rows, columns) + 1);
 }
 
@@ -90,8 +89,8 @@ bool hasData(int** baseTable, Pos position){
     return baseTable[position.row][position.col] != 0;
 }
 
-bool validPosition(int pos, int rows, int columns){
-    return pos < rows*columns;
+bool validPosition(Pos pos, int rows, int columns){
+    return pos.row < rows && pos.col < columns;
 }
 
 void storeSolutionInBase(int** baseTable, int** answerTable, int rows, int columns){
@@ -117,15 +116,15 @@ void printTable(int** table, int rows, int columns){
 
 void backtracking(int** baseTable, int** answerTable, int rows, int columns, int currentPosition) {
     Pos pos = getPosition(currentPosition, columns);
-	while (validPosition(currentPosition, rows, columns) && hasData(baseTable, pos)){
+	while (validPosition(pos, rows, columns) && hasData(baseTable, pos)){
         currentPosition++;
         pos = getPosition(currentPosition, columns);
     }
-    if(!validPosition(currentPosition, rows, columns)) { 
+    if(!validPosition(pos, rows, columns)) { 
         storeSolutionInBase(baseTable, answerTable, rows, columns);
 		return;
 	} else {
-        //cout << pos.row << "|" << pos.col << endl;
+        //cout << pos.row << "|" << pos.col << " " << rows << "|" << columns << endl;
         //  printTable(answerTable, rows, columns);
         //  cout <<endl;
         for(int i=1; i<=max(columns, rows); i++) {
